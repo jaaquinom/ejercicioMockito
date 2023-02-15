@@ -55,22 +55,32 @@ class ExamenServiceImplTest {
     void testSaveConPreguntas(){
 
         Examen examen = Datos.EXAMEN;
-        examen.setPreguntas(Datos.PREGUNTAS);
+
 
         when(service.save(examen)).thenReturn(new Examen(2L,"Fisica"));
+        when(examenRepository.save(examen)).thenReturn(examen);
+
 
         Examen examenConPreguntas = service.save(examen);
+        examenConPreguntas.setPreguntas(Datos.PREGUNTAS);
 
-        assertTrue(examenConPreguntas.getPreguntas().isEmpty());
+
+        assertTrue(!examenConPreguntas.getPreguntas().isEmpty());
+        assertEquals(examenConPreguntas, examen);
+        verify(examenRepository).save(examen);
+
     }
     @Test
     void testSaveSinPreguntas(){
 
         Examen examen = Datos.EXAMEN;
         when(service.save(examen)).thenReturn(new Examen(2L,"Fisica"));
+        when(examenRepository.save(examen)).thenReturn(examen);
+
         Examen examenSinPreguntas = service.save(examen);
 
         assertTrue(examenSinPreguntas.getPreguntas().isEmpty());
+        verify(examenRepository).save(examen);
     }
     @Test
     void testFindExamenPorNombreConPreguntas() {
